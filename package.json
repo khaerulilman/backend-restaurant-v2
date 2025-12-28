@@ -1,0 +1,28 @@
+{
+  "name": "web-restaurant-backend",
+  "version": "1.0.0",
+  "description": "Backend for web restaurant application",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "start": "node index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:push": "prisma db push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "cloudinary": "^2.8.0",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.19.1"
+  }
+}
