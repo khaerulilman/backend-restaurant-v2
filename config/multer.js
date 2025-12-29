@@ -11,7 +11,7 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image/")) {
       cb(null, true);
-    } else {
+    } else {  
       cb(new Error("File harus berupa gambar"), false);
     }
   },

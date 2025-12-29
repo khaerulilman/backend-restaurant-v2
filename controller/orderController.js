@@ -3,55 +3,45 @@ import prisma from "../config/db.js";
 class OrderController {
   static async create(req, res) {
     try {
-      const { menuId, qty, email, noMeja, note, noTelp } = req.body;
+      const { email, noMeja, note, items, noTelp } = req.body;
 
-      if (
-        menuId == null ||
-        qty == null ||
-        noMeja == null ||
-        (email == null && noTelp == null)
-      ) {
+      if (!Array.isArray(items) && items.length == 0) {
         return res.status(400).json({
           success: false,
-          message: "menuId, qty, noMeja dan (email atau noTelp) wajib diisi",
+          message: "Menu items tidak valid",
         });
       }
 
-      const menu = await prisma.menu.findUnique({
-        where: { id: Number(menuId) },
-      });
-
-      if (!menu) {
-        return res.status(404).json({
+      if (noMeja == null || (email == null && noTelp == null)) {
+        return res.status(400).json({
           success: false,
-          message: "menu tidak ditemukan",
+          message: "noMeja dan (email atau noTelp) wajib diisi",
         });
       }
 
-      const newOrder = await prisma.order.create({
-        data: {
-          qty: Number(qty),
-          email: email || null,
-          noMeja: Number(noMeja),
-          note: note || null,
-          noTelp: noTelp ? String(noTelp) : null,
-          menu: {
-            connect: { id: Number(menuId) },
-          },
-        },
+      const dataOrderArray = items.map((item) => ({
+        menuId: Number(item.id),
+        qty: Number(item.qty),
+        email: email || null,
+        note: note || null,
+        noTelp: noTelp || null,
+        noMeja: Number(noMeja),
+      }));
+
+      const newOrder = await prisma.order.createMany({
+        data: dataOrderArray,
       });
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
-        message: "order berhasil dibuat",
+        message: "data berhasil masuk",
         data: newOrder,
       });
     } catch (error) {
       console.error("Create order error:", error);
       return res.status(500).json({
         success: false,
-        message: "gagal membuat order",
-        error: error.message,
+        message: "Failed to create order",
       });
     }
   }
